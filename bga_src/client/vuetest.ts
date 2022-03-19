@@ -227,13 +227,6 @@ define([
       // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
       // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
       //
-
-      dojo.subscribe('getNum', this, (args: any) => {
-        vue.notifications.push({
-          name: 'getNum',
-          args: args
-        });
-      });
     },
 
     // TODO: from this point and below, you can write your game notifications handling methods
