@@ -24,8 +24,6 @@ declare const $: any;
 declare const dojo: Dojo;
 declare const g_gamethemeurl: string;
 
-
-// nconst vuetest = new Vuetest();
 define([
   "dojo",
   "dojo/_base/declare",
@@ -34,13 +32,11 @@ define([
   g_gamethemeurl + "modules/chunk-vendors.js",
   g_gamethemeurl + "modules/app.js",
 ], function (dojo: Dojo, declare: any) {
-  let vue: any = null;
   return declare("bgagame.vuetest", ebg.core.gamegui, {
     constructor: function(){
       // Here, you can init the global variables of your user interface
       // Example:
       // this.myGlobalValue = 0;
-      vue = (window as any)["vue"];
     },
 
     /*
@@ -67,7 +63,6 @@ define([
       }
 
       // TODO: Set up your game interface here, according to "gamedatas"
-      vue.gamedata = gamedatas;
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
