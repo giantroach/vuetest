@@ -17,12 +17,15 @@
 
 import { Dojo, Game, Player } from "./type/framework.d";
 import { Gamedata } from "./type/gamedata.d";
+import { BgaRequest } from "./type/bga-interface.d";
 
 declare const define: any;
 declare const ebg: any;
 declare const $: any;
 declare const dojo: Dojo;
 declare const g_gamethemeurl: string;
+
+const appName = "vuetest";
 
 define([
   "dojo",
@@ -32,11 +35,13 @@ define([
   g_gamethemeurl + "modules/chunk-vendors.js",
   g_gamethemeurl + "modules/app.js",
 ], function (dojo: Dojo, declare: any) {
+  let vue: any = null;
   return declare("bgagame.vuetest", ebg.core.gamegui, {
-    constructor: function(){
+    constructor: function () {
       // Here, you can init the global variables of your user interface
       // Example:
       // this.myGlobalValue = 0;
+      vue = (window as any)["vue"];
     },
 
     /*
@@ -63,9 +68,11 @@ define([
       }
 
       // TODO: Set up your game interface here, according to "gamedatas"
+      vue.gamedata = gamedatas;
 
       // Setup game notifications to handle (see "setupNotifications" method below)
       this.setupNotifications();
+      this.setupActions();
 
       console.log("Ending game setup");
     },
@@ -80,7 +87,7 @@ define([
       console.log("Entering state: " + stateName);
 
       switch (stateName) {
-          /* Example:
+        /* Example:
 
              case 'myGameState':
 
@@ -102,7 +109,7 @@ define([
       console.log("Leaving state: " + stateName);
 
       switch (stateName) {
-          /* Example:
+        /* Example:
 
              case 'myGameState':
 
@@ -125,8 +132,8 @@ define([
 
       if (this.isCurrentPlayerActive()) {
         switch (
-            stateName
-            /*
+          stateName
+          /*
               Example:
 
               case 'myGameState':
@@ -227,6 +234,13 @@ define([
       // dojo.subscribe( 'cardPlayed', this, "notif_cardPlayed" );
       // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
       //
+
+      dojo.subscribe("getNum", this, (data: any) => {
+        vue.bgaNotifications.push({
+          name: "getNum",
+          args: data.args,
+        });
+      });
     },
 
     // TODO: from this point and below, you can write your game notifications handling methods
@@ -245,5 +259,31 @@ define([
       },
 
     */
+
+    setupActions: function () {
+      vue.$watch("bgaRequest", (req: BgaRequest | null) => {
+        if (!req) {
+          return;
+        }
+        const reqBase = `/${appName}/${appName}`;
+        const url = `${reqBase}/${req.name}.html`;
+        vue.bgaRequestPromise = new Promise((resolve, reject) => {
+          this.ajaxcall(
+            url,
+            req.args,
+            this,
+            (result: any) => {
+              resolve(result);
+            },
+            (error: boolean) => {
+              // this is called even if it success
+              if (error) {
+                reject(error);
+              }
+            }
+          );
+        });
+      });
+    },
   });
 });

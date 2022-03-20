@@ -12,9 +12,9 @@
  * gameoptions.inc.php
  *
  * vuetest game options description
- * 
+ *
  * In this file, you can define your game options (= game variants).
- *   
+ *
  * Note: If your game has no variant, you don't have to modify this file.
  *
  * Note²: All options defined in this file should have a corresponding "game state labels"
@@ -24,9 +24,8 @@
  *
  */
 
-$game_options = array(
-
-    /*
+$game_options = [
+  /*
     
     // note: game variant ID should start at 100 (ie: 100, 101, 102, ...). The maximum is 199.
     100 => array(
@@ -51,7 +50,4 @@ $game_options = array(
             ),
 
     */
-
-);
-
-
+];
