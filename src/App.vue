@@ -20,6 +20,7 @@ import HelloWorld from "./components/HelloWorld.vue";
 })
 export default class App extends Vue {
   public bgaRequest: BgaRequest | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public bgaRequestPromise: Promise<any> = Promise.resolve();
   public bgaNotifications: BgaNotification[] = [];
   public num = 0;
@@ -41,6 +42,7 @@ export default class App extends Vue {
     this.initBgaNotification();
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public request(name: string, args: any): Promise<any> {
     return new Promise((resolve, reject) => {
       this.bgaRequest = {
