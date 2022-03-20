@@ -235,10 +235,13 @@ define([
       // this.notifqueue.setSynchronous( 'cardPlayed', 3000 );
       //
 
-      dojo.subscribe("getNum", this, (data: any) => {
-        vue.bgaNotifications.push({
-          name: "getNum",
-          args: data.args,
+      const notifications = ["getNum"];
+      notifications.forEach((n) => {
+        dojo.subscribe(n, this, (data: any) => {
+          vue.bgaNotifications.push({
+            name: n,
+            args: data.args,
+          });
         });
       });
     },
