@@ -128,7 +128,7 @@ export default class GameCard extends Vue {
     const cat = ids[1];
     const idx = Number(ids[2]);
     const def = this.cardDef[cat];
-    this.text = def.texts[idx];
+    this.text = def.details[idx].text;
     this.image = def.image;
     this.size = def.size;
     this.textDef = def.textDef;
