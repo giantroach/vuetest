@@ -42,6 +42,7 @@ define([
       // Example:
       // this.myGlobalValue = 0;
       vue = (window as any)["vue"];
+      vue.urlBase.value = g_gamethemeurl;
     },
 
     /*

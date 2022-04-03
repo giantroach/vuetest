@@ -1,22 +1,56 @@
 <template>
   {{ num }}
   <button v-on:click="getNum">Get Num</button>
+  <div id="modals"></div>
+
+  <Hand></Hand>
+
+  <GameCard id="mainCard0" :prioritizeMini="true"> </GameCard>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+import { Ref, ref } from "vue";
+// from: https://stackoverflow.com/a/69367607
+// import { computed } from "@vue/reactivity";
 import { watch } from "vue";
 import { Gamedata } from "bga_src/client/type/gamedata.d";
 import {
   BgaRequest,
   BgaNotification,
 } from "bga_src/client/type/bga-interface.d";
-import HelloWorld from "./components/HelloWorld.vue";
+import GameCard from "./components/GameCard.vue";
+import Hand from "./components/Hand.vue";
 
 @Options({
   components: {
-    HelloWorld,
+    GameCard,
+    Hand,
   },
+  provide: () => {
+    return {
+      // provided through main.ts
+      // urlBase: ref(""),
+      cardDef: {
+        mainCard: {
+          image: require("@/assets/cardset.png"),
+          size: { width: "276px", height: "390px" },
+          textDef: {
+            offsetY: "50%",
+            padding: "24px",
+          },
+          texts: [
+            "The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. Here we put some long long long text to see how the overwrap things are working. i.e. it should show SCROLLer automatically.",
+          ],
+          miniDef: {
+            image: require("@/assets/cardset-mini.png"),
+            size: { width: "138px", height: "120px" },
+          },
+        },
+      },
+    };
+  },
+  inject: ["urlBase"],
 })
 export default class App extends Vue {
   public bgaRequest: BgaRequest | null = null;
@@ -24,6 +58,7 @@ export default class App extends Vue {
   public bgaRequestPromise: Promise<any> = Promise.resolve();
   public bgaNotifications: BgaNotification[] = [];
   public num = 0;
+  public urlBase!: Ref<string>;
 
   public gamedata: Gamedata = {
     current_player_id: "",
@@ -76,6 +111,10 @@ export default class App extends Vue {
       }
     });
   }
+
+  // public showModal(args: any) {
+  //   console.log("args", args);
+  // }
 
   public getNum(): void {
     this.request("getNum", {
