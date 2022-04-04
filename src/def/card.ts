@@ -3,7 +3,7 @@ import { CardDef } from "../type/CardDef.d";
 export const cardDefs: { [cardType: string]: CardDef } = {
   mainCard: {
     image: require("@/assets/cardset.png"),
-    size: { width: "276px", height: "390px" },
+    size: { width: "276px", height: "390px", radius: "20px" },
     textDef: {
       offsetY: "50%",
       padding: "24px",
@@ -21,7 +21,7 @@ export const cardDefs: { [cardType: string]: CardDef } = {
     },
     miniDef: {
       image: require("@/assets/cardset-mini.png"),
-      size: { width: "138px", height: "120px" },
+      size: { width: "138px", height: "120px", radius: "10px" },
     },
   },
 };

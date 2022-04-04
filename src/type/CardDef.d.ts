@@ -1,6 +1,7 @@
 interface SizeDef {
   width: string;
   height: string;
+  radius: string;
 }
 
 interface TextLayoutDef {

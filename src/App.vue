@@ -1,9 +1,9 @@
 <template>
   {{ num }}
   <button v-on:click="getNum">Get Num</button>
-  <div id="modals"></div>
 
   <Hand :cardIDs="['mainCard0', 'mainCard1', 'mainCard2']"></Hand>
+  <div id="modals"></div>
 </template>
 
 <script lang="ts">
@@ -28,7 +28,7 @@ import Hand from "./components/Hand.vue";
   },
   provide: () => {
     return {
-      // provided through main.ts
+      // provided through main.ts so that it can inject itself
       // urlBase: ref(""),
       cardDef: cardDefs,
     };

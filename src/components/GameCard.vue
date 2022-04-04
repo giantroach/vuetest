@@ -7,6 +7,7 @@
           width: size.width,
           height: size.height,
           backgroundImage: 'url(' + urlBase.value + image + ')',
+          borderRadius: size.radius,
         }"
       >
         <div v-if="text" class="container-text">
@@ -31,6 +32,7 @@
           width: miniDef.size.width,
           height: miniDef.size.height,
           backgroundImage: 'url(' + urlBase.value + miniDef.image + ')',
+          borderRadius: miniDef.size.radius,
         }"
         @click="showDetails"
         v-on:mouseover="showDetails"
@@ -40,6 +42,7 @@
 
   <teleport to="#modals" v-if="modal">
     <div
+      :id="'card-modal-' + id"
       class="card card-modal"
       v-bind:style="{
         width: size.width,
@@ -47,6 +50,7 @@
         top: modalTop + 'px',
         left: modalLeft + 'px',
         backgroundImage: 'url(' + urlBase.value + image + ')',
+        borderRadius: size.radius,
       }"
     >
       <div v-if="text" class="container-text">
@@ -136,8 +140,6 @@ export default class GameCard extends Vue {
   }
 
   public showDetails(evt: MouseEvent) {
-    console.log("evt", evt);
-
     const elm = evt.srcElement as HTMLElement;
     const rect = elm.getBoundingClientRect();
 
@@ -148,7 +150,7 @@ export default class GameCard extends Vue {
 
     setTimeout(() => {
       // wait for render
-      const mcElm = document.querySelector(".card-modal");
+      const mcElm = document.querySelector("#card-modal-" + this.id);
       if (!mcElm) {
         return;
       }
@@ -156,9 +158,8 @@ export default class GameCard extends Vue {
       const mcTop = centerY - mcRect.height / 2;
       const mcLeft = centerX - mcRect.width / 2;
       this.modalTop = mcTop > 0 ? mcTop : 0;
-      this.modalLeft = mcLeft > 0 ? mcTop : 0;
+      this.modalLeft = mcLeft > 0 ? mcLeft : 0;
     });
-    // this.$emit("showModal", { aaa: "bbb" });
   }
 
   public hideDetails() {
@@ -173,6 +174,7 @@ export default class GameCard extends Vue {
 }
 .card {
   position: relative;
+  box-shadow: 0 5px 5px 5px rgb(0 0 0 / 50%);
 }
 .card-modal {
   position: absolute;

@@ -1,9 +1,9 @@
 <template>
-  <div>
-    <div v-for="cid in cardIDs" :key="cid">
+  <ul class="hand">
+    <li v-for="cid in cardIDs" :key="cid">
       <GameCard :id="cid" :prioritizeMini="true"> </GameCard>
-    </div>
-  </div>
+    </li>
+  </ul>
 </template>
 
 <script lang="ts">
@@ -23,4 +23,13 @@ export default class Hand extends Vue {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+ul.hand {
+  display: flex;
+  justify-content: center;
+}
+li {
+  list-style-type: none;
+  margin-left: -20px;
+}
+</style>
