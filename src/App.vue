@@ -2,6 +2,7 @@
   {{ num }}
   <button v-on:click="getNum">Get Num</button>
 
+  <Grid type="table"></Grid>
   <Hand :cardIDs="['mainCard0', 'mainCard1', 'mainCard2']"></Hand>
   <div id="modals"></div>
 </template>
@@ -18,19 +19,23 @@ import {
   BgaNotification,
 } from "bga_src/client/type/bga-interface.d";
 import { cardDefs } from "./def/card";
+import { gridDefs } from "./def/grid";
 import GameCard from "./components/GameCard.vue";
 import Hand from "./components/Hand.vue";
+import Grid from "./components/Grid.vue";
 
 @Options({
   components: {
     GameCard,
     Hand,
+    Grid,
   },
   provide: () => {
     return {
       // provided through main.ts so that it can inject itself
       // urlBase: ref(""),
       cardDef: cardDefs,
+      gridDef: gridDefs,
     };
   },
   inject: ["urlBase"],

@@ -24,12 +24,16 @@ export default class Hand extends Vue {
 </script>
 
 <style scoped lang="scss">
+ul {
+  padding: 0;
+}
 ul.hand {
   display: flex;
   justify-content: center;
 }
 li {
   list-style-type: none;
-  margin-left: -20px;
+  margin-left: -10px;
+  margin-right: -10px;
 }
 </style>

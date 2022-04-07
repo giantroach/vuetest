@@ -124,7 +124,6 @@ export default class GameCard extends Vue {
   public urlBase!: Ref<string>;
 
   public created() {
-    this.cardDef;
     const ids = /(.+)(\d+)/.exec(this.id);
     if (!ids) {
       return;
@@ -177,8 +176,13 @@ export default class GameCard extends Vue {
   box-shadow: 0 5px 5px 5px rgb(0 0 0 / 50%);
 }
 .card-modal {
+  opacity: 0;
+  transition: opacity 0.4s;
   position: absolute;
   z-index: 2;
+}
+.card-modal:hover {
+  opacity: 1;
 }
 .container-text,
 .text {
