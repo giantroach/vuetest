@@ -16,13 +16,15 @@ interface CardDetail {
 
 interface CardDef {
   image: string;
+  sprite: string;
   size: SizeDef;
-  textDef: TextLayoutDef;
-  details: {
+  textDef?: TextLayoutDef;
+  details?: {
     [id: number]: CardDetail;
   };
-  miniDef: {
+  miniDef?: {
     image: string;
+    sprite: string;
     size: SizeDef;
   };
 }

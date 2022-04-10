@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <template v-if="!prioritizeMini">
+    <template v-if="!prioritizeMini || !miniDef">
       <div
         class="card"
         v-bind:style="{
@@ -8,6 +8,7 @@
           height: size.height,
           backgroundImage: 'url(' + urlBase.value + image + ')',
           borderRadius: size.radius,
+          backgroundPosition: bgPos,
         }"
       >
         <div v-if="text" class="container-text">
@@ -33,6 +34,7 @@
           height: miniDef.size.height,
           backgroundImage: 'url(' + urlBase.value + miniDef.image + ')',
           borderRadius: miniDef.size.radius,
+          backgroundPosition: bgPosMini,
         }"
         @click="showDetails"
         v-on:mouseover="showDetails"
@@ -51,6 +53,7 @@
         left: modalLeft + 'px',
         backgroundImage: 'url(' + urlBase.value + image + ')',
         borderRadius: size.radius,
+        backgroundPosition: bgPos,
       }"
     >
       <div v-if="text" class="container-text">
@@ -75,6 +78,7 @@
 import { Options, Vue } from "vue-class-component";
 import { Ref } from "vue";
 import Modal from "./Modal.vue";
+import { SizeDef } from "../type/CardDef.d";
 
 export interface Size {
   // xRatio: number;
@@ -122,8 +126,10 @@ export default class GameCard extends Vue {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public cardDef!: any;
   public urlBase!: Ref<string>;
+  public bgPos = "0 0";
+  public bgPosMini = "0 0";
 
-  public created() {
+  public created(): void {
     const ids = /(.+)(\d+)/.exec(this.id);
     if (!ids) {
       return;
@@ -131,11 +137,16 @@ export default class GameCard extends Vue {
     const cat = ids[1];
     const idx = Number(ids[2]);
     const def = this.cardDef[cat];
-    this.text = def.details[idx].text;
+    this.text = def.details?.[idx]?.text || "";
     this.image = def.image;
     this.size = def.size;
     this.textDef = def.textDef;
     this.miniDef = def.miniDef;
+    this.bgPos = this.getBgPos(def.sprite, def.size, idx);
+    if (!def.miniDef) {
+      return;
+    }
+    this.bgPosMini = this.getBgPos(def.miniDef.sprite, def.miniDef.size, idx);
   }
 
   public showDetails(evt: MouseEvent) {
@@ -161,6 +172,19 @@ export default class GameCard extends Vue {
     });
   }
 
+  private getBgPos(sprite: string, size: SizeDef, idx: number): string {
+    const sm = /^(\d+)x(\d+)/g.exec(sprite);
+    const wm = /^(\d+)(.*)/g.exec(size.width);
+    const hm = /^(\d+)(.*)/g.exec(size.height);
+    if (!sm || !wm || !hm) {
+      return "0 0";
+    }
+    const colNum = Number(sm[1]);
+    const y = Math.floor(idx / colNum);
+    const x = idx % Number(colNum);
+    return `-${x * Number(wm[1])}${wm[2]} -${y * Number(hm[1])}${hm[2]}`;
+  }
+
   public hideDetails() {
     this.modal = false;
   }
@@ -173,7 +197,7 @@ export default class GameCard extends Vue {
 }
 .card {
   position: relative;
-  box-shadow: 0 5px 5px 5px rgb(0 0 0 / 50%);
+  box-shadow: 0 5px 5px 5px rgb(0 0 0 / 30%);
 }
 .card-modal {
   opacity: 0;

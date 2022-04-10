@@ -1,9 +1,13 @@
 <template>
-  {{ num }}
-  <button v-on:click="getNum">Get Num</button>
+  <div>
+    {{ num }}
+    <button v-on:click="getNum">Get Num</button>
+  </div>
 
-  <Grid type="table"></Grid>
-  <Hand :cardIDs="['mainCard0', 'mainCard1', 'mainCard2']"></Hand>
+  <div>
+    <Grid type="table" :cardIDs="tableCards"></Grid>
+    <Hand :cardIDs="['mainCard0', 'mainCard1', 'mainCard2']"></Hand>
+  </div>
   <div id="modals"></div>
 </template>
 
@@ -47,6 +51,13 @@ export default class App extends Vue {
   public bgaNotifications: BgaNotification[] = [];
   public num = 0;
   public urlBase!: Ref<string>;
+  public tableCards: string[][] = [
+    ["mainCard1"],
+    [],
+    ["centerCard0", "centerCard1", "centerCard2"],
+    [],
+    [],
+  ];
 
   public gamedata: Gamedata = {
     current_player_id: "",

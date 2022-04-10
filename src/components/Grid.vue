@@ -11,7 +11,7 @@
     >
       <ul>
         <li
-          v-for="gridCell in gridRow"
+          v-for="(gridCell, idy) in gridRow"
           :key="gridCell"
           class="grid-cell"
           v-bind:style="{
@@ -20,7 +20,13 @@
             borderRadius: size.radius,
             margin: margin,
           }"
-        ></li>
+        >
+          <template
+            v-if="cardIDs && cardIDs[idy] && cardIDs[idy][idx] !== undefined"
+          >
+            <GameCard :id="cardIDs[idy][idx]" :prioritizeMini="true"></GameCard>
+          </template>
+        </li>
       </ul>
     </li>
   </ul>
@@ -37,6 +43,7 @@ import GameCard from "./GameCard.vue";
   },
   props: {
     type: String,
+    cardIDs: Array,
   },
   inject: ["gridDef"],
 })
@@ -46,6 +53,7 @@ export default class Grid extends Vue {
   public type!: string;
   public size!: SizeDef;
   public margin!: string;
+  public cardIDs!: string[][];
 
   public created() {
     const def = this.gridDef[this.type];
@@ -55,9 +63,7 @@ export default class Grid extends Vue {
       this.grid = def.layout;
     }
     this.size = def.size;
-    debugger;
     this.margin = this.formatMargin(def.margin);
-    console.log("this.grid", this.grid);
   }
 
   private parseLayoutStr(layoutStr: string): number[][] {
@@ -92,5 +98,9 @@ li {
 }
 li.grid-cell {
   border: 1px solid rgba(0, 0, 0, 0.5);
+}
+ul.grid {
+  transform: scale(0.6);
+  margin: -120px 0;
 }
 </style>
