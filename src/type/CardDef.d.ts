@@ -10,8 +10,14 @@ interface TextLayoutDef {
   padding: string;
 }
 
+type Conditions = "handSelectable" | "targetAfterPlay" | "gridSelectable";
+
 interface CardDetail {
   text: string;
+  conditions?: any;
+  // conditions?: {
+  //   [key: Conditions]: Function;
+  // };
 }
 
 interface CardDef {

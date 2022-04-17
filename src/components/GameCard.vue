@@ -3,6 +3,10 @@
     <template v-if="!prioritizeMini || !miniDef">
       <div
         class="card"
+        :class="{
+          selectable: !selected && selectable,
+          selected: selected,
+        }"
         v-bind:style="{
           width: size.width,
           height: size.height,
@@ -10,6 +14,7 @@
           borderRadius: size.radius,
           backgroundPosition: bgPos,
         }"
+        @click="selectCard"
       >
         <div v-if="text" class="container-text">
           <div
@@ -29,6 +34,10 @@
     <template v-if="miniDef && prioritizeMini">
       <div
         class="card card-mini"
+        :class="{
+          selectable: !selected && selectable,
+          selected: selected,
+        }"
         v-bind:style="{
           width: miniDef.size.width,
           height: miniDef.size.height,
@@ -36,7 +45,7 @@
           borderRadius: miniDef.size.radius,
           backgroundPosition: bgPosMini,
         }"
-        @click="showDetails"
+        @click="[showDetails($event), selectCard($event)]"
         v-on:mouseover="showDetails"
       ></div>
     </template>
@@ -46,6 +55,10 @@
     <div
       :id="'card-modal-' + id"
       class="card card-modal"
+      :class="{
+        selectable: !selected && selectable,
+        selected: selected,
+      }"
       v-bind:style="{
         width: size.width,
         height: size.height,
@@ -64,6 +77,7 @@
             top: textDef.offsetY,
             borderWidth: textDef.padding || 0,
           }"
+          @click="selectCard"
         >
           {{ text }}
         </div>
@@ -94,8 +108,10 @@ export interface Size {
   props: {
     id: String,
     prioritizeMini: Boolean,
+    selectable: Boolean,
   },
   inject: ["urlBase", "cardDef"],
+  emits: ["cardSelect"],
 })
 export default class GameCard extends Vue {
   public name!: string;
@@ -117,6 +133,8 @@ export default class GameCard extends Vue {
       height: number;
     };
   };
+  public selected = false;
+  public selectable!: boolean;
 
   public modal = false;
   public modalTop = 0;
@@ -149,6 +167,10 @@ export default class GameCard extends Vue {
     this.bgPosMini = this.getBgPos(def.miniDef.sprite, def.miniDef.size, idx);
   }
 
+  // public mouseover(evt: MouseEvent) {
+  //   this.
+  // }
+
   public showDetails(evt: MouseEvent) {
     const elm = evt.srcElement as HTMLElement;
     const rect = elm.getBoundingClientRect();
@@ -161,12 +183,20 @@ export default class GameCard extends Vue {
     setTimeout(() => {
       // wait for render
       const mcElm = document.querySelector("#card-modal-" + this.id);
+      const body = document.body;
       if (!mcElm) {
         return;
       }
       const mcRect = mcElm.getBoundingClientRect();
-      const mcTop = centerY - mcRect.height / 2;
-      const mcLeft = centerX - mcRect.width / 2;
+      let mcTop = centerY - mcRect.height / 2;
+      let mcLeft = centerX - mcRect.width / 2;
+      const bdRect = body.getBoundingClientRect();
+      if (mcTop + mcRect.height > bdRect.height) {
+        mcTop = bdRect.height - mcRect.height;
+      }
+      if (mcLeft + mcRect.width > bdRect.width) {
+        mcLeft = bdRect.width - mcRect.width;
+      }
       this.modalTop = mcTop > 0 ? mcTop : 0;
       this.modalLeft = mcLeft > 0 ? mcLeft : 0;
     });
@@ -183,6 +213,19 @@ export default class GameCard extends Vue {
     const y = Math.floor(idx / colNum);
     const x = idx % Number(colNum);
     return `-${x * Number(wm[1])}${wm[2]} -${y * Number(hm[1])}${hm[2]}`;
+  }
+
+  public selectCard() {
+    // this.hideDetails();
+    this.selected = !this.selected;
+    if (this.selected) {
+      this.$emit("selectCard", this.id);
+    }
+  }
+
+  public unselectCard() {
+    // this.hideDetails();
+    this.selected = false;
   }
 
   public hideDetails() {
@@ -221,5 +264,13 @@ export default class GameCard extends Vue {
 }
 .title {
   position: absolute;
+}
+.selectable {
+  border: 2px solid #05fdff;
+  box-shadow: 0 0 5px 2px #05fdff;
+}
+.selected {
+  border: 2px solid #fefb05;
+  box-shadow: 0 0 5px 2px #fefb05;
 }
 </style>
