@@ -5,8 +5,16 @@
   </div>
 
   <div>
-    <Grid type="table" :cardIDs="tableCards"></Grid>
-    <Hand :cardIDs="['mainCard0', 'mainCard1', 'mainCard2']"></Hand>
+    <Grid
+      ref="grid"
+      type="table"
+      :cardIDs="gridData.cards"
+      :selectable="gridData.selectable"
+      :selected="gridData.selected"
+      :active="gridData.active"
+    >
+    </Grid>
+    <Hand ref="hand" :cardIDs="['mainCard0', 'mainCard1', 'mainCard2']"></Hand>
   </div>
   <div id="modals"></div>
 </template>
@@ -22,8 +30,10 @@ import {
   BgaRequest,
   BgaNotification,
 } from "bga_src/client/type/bga-interface.d";
+import { GridData } from "./type/Grid.d";
 import { cardDefs } from "./def/card";
 import { gridDefs } from "./def/grid";
+import { State } from "./def/state";
 import GameCard from "./components/GameCard.vue";
 import Hand from "./components/Hand.vue";
 import Grid from "./components/Grid.vue";
@@ -51,13 +61,18 @@ export default class App extends Vue {
   public bgaNotifications: BgaNotification[] = [];
   public num = 0;
   public urlBase!: Ref<string>;
-  public tableCards: string[][] = [
-    ["mainCard1"],
-    [],
-    ["centerCard0", "centerCard1", "centerCard2"],
-    [],
-    [],
-  ];
+  public gridData: GridData = {
+    cards: [
+      [],
+      ["mainCard1"],
+      ["centerCard0", "centerCard1", "centerCard2"],
+      [],
+      [],
+    ],
+    selectable: [[], [], [], [true, true, false], []],
+    selected: [],
+    active: true,
+  };
 
   public gamedata: Gamedata = {
     current_player_id: "",
@@ -74,6 +89,7 @@ export default class App extends Vue {
 
   mounted() {
     this.initBgaNotification();
+    const s = new State(this.gridData);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

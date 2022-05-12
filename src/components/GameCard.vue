@@ -111,7 +111,7 @@ export interface Size {
     selectable: Boolean,
   },
   inject: ["urlBase", "cardDef"],
-  emits: ["cardSelect"],
+  emits: ["selectCard"],
 })
 export default class GameCard extends Vue {
   public name!: string;
@@ -215,8 +215,11 @@ export default class GameCard extends Vue {
     return `-${x * Number(wm[1])}${wm[2]} -${y * Number(hm[1])}${hm[2]}`;
   }
 
-  public selectCard() {
+  public selectCard(): void {
     // this.hideDetails();
+    if (!this.selectable) {
+      return;
+    }
     this.selected = !this.selected;
     if (this.selected) {
       this.$emit("selectCard", this.id);

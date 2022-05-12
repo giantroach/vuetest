@@ -25,6 +25,7 @@ import GameCard from "./GameCard.vue";
   props: {
     cardIDs: Array,
     exclusiveSelect: Boolean,
+    active: Boolean,
   },
   inject: ["cardDef"],
 })
@@ -32,6 +33,8 @@ export default class Hand extends Vue {
   public cardIDs!: number[];
   public cardDef!: { [cardType: string]: CardDef };
   public exclusiveSelect = true;
+  public active!: boolean;
+
   public isCardSelectable(cid: string): boolean {
     const ids = /(.+)(\d+)/.exec(cid);
     if (!ids) {
