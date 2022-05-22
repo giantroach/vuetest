@@ -8,13 +8,21 @@
     <Grid
       ref="grid"
       type="table"
-      :cardIDs="gridData.cards"
+      :cardIDs="gridData.cardIDs"
       :selectable="gridData.selectable"
       :selected="gridData.selected"
       :active="gridData.active"
     >
     </Grid>
-    <Hand ref="hand" :cardIDs="['mainCard0', 'mainCard1', 'mainCard2']"></Hand>
+    <Hand
+      ref="hand"
+      type="card"
+      :cardIDs="handData.cardIDs"
+      :selectable="handData.selectable"
+      :selected="handData.selected"
+      :active="handData.active"
+    >
+    </Hand>
   </div>
   <div id="modals"></div>
 </template>
@@ -31,9 +39,11 @@ import {
   BgaNotification,
 } from "bga_src/client/type/bga-interface.d";
 import { GridData } from "./type/Grid.d";
+import { HandData } from "./type/Hand.d";
 import { cardDefs } from "./def/card";
 import { gridDefs } from "./def/grid";
-import { State } from "./def/state";
+import { handDefs } from "./def/hand";
+import { State } from "./logic/state";
 import GameCard from "./components/GameCard.vue";
 import Hand from "./components/Hand.vue";
 import Grid from "./components/Grid.vue";
@@ -50,6 +60,7 @@ import Grid from "./components/Grid.vue";
       // urlBase: ref(""),
       cardDef: cardDefs,
       gridDef: gridDefs,
+      handDef: handDefs,
     };
   },
   inject: ["urlBase"],
@@ -62,7 +73,7 @@ export default class App extends Vue {
   public num = 0;
   public urlBase!: Ref<string>;
   public gridData: GridData = {
-    cards: [
+    cardIDs: [
       [],
       ["mainCard1"],
       ["centerCard0", "centerCard1", "centerCard2"],
@@ -70,6 +81,14 @@ export default class App extends Vue {
       [],
     ],
     selectable: [[], [], [], [true, true, false], []],
+    selected: [],
+    exclusiveSelect: true,
+    active: true,
+  };
+
+  public handData: HandData = {
+    cardIDs: ["mainCard0", "mainCard1", "mainCard2"],
+    selectable: [true, true, false],
     selected: [],
     active: true,
   };

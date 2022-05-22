@@ -3,10 +3,6 @@
     <template v-if="!prioritizeMini || !miniDef">
       <div
         class="card"
-        :class="{
-          selectable: !selected && selectable,
-          selected: selected,
-        }"
         v-bind:style="{
           width: size.width,
           height: size.height,
@@ -34,10 +30,6 @@
     <template v-if="miniDef && prioritizeMini">
       <div
         class="card card-mini"
-        :class="{
-          selectable: !selected && selectable,
-          selected: selected,
-        }"
         v-bind:style="{
           width: miniDef.size.width,
           height: miniDef.size.height,
@@ -108,7 +100,8 @@ export interface Size {
   props: {
     id: String,
     prioritizeMini: Boolean,
-    selectable: Boolean,
+    selectable: Boolean, // for card detail modal
+    selected: Boolean, // for card detail modal
   },
   inject: ["urlBase", "cardDef"],
   emits: ["selectCard"],
@@ -133,7 +126,7 @@ export default class GameCard extends Vue {
       height: number;
     };
   };
-  public selected = false;
+  public selected!: boolean;
   public selectable!: boolean;
 
   public modal = false;
@@ -166,10 +159,6 @@ export default class GameCard extends Vue {
     }
     this.bgPosMini = this.getBgPos(def.miniDef.sprite, def.miniDef.size, idx);
   }
-
-  // public mouseover(evt: MouseEvent) {
-  //   this.
-  // }
 
   public showDetails(evt: MouseEvent) {
     const elm = evt.srcElement as HTMLElement;
@@ -220,10 +209,7 @@ export default class GameCard extends Vue {
     if (!this.selectable) {
       return;
     }
-    this.selected = !this.selected;
-    if (this.selected) {
-      this.$emit("selectCard", this.id);
-    }
+    this.$emit("selectCard", this.id);
   }
 
   public unselectCard() {

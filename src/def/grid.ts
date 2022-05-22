@@ -1,6 +1,23 @@
 import { GridDef } from "../type/GridDef.d";
 
-export const gridDefs: { [cardType: string]: GridDef } = {
+// const isGridSelectable = (
+//   x: number,
+//   y: number,
+//   cardIDs: string[][],
+// ): boolean => {
+//   if (y < 3) {
+//     return false;
+//   }
+//   if (cardIDs[y][x]) {
+//     return false;
+//   }
+//   if (!cardIDs[y - 1][x]) {
+//     return false;
+//   }
+//   return true;
+// };
+
+const gridDefs: { [cardType: string]: GridDef } = {
   table: {
     type: "square",
     layout: "3x5",
@@ -8,3 +25,5 @@ export const gridDefs: { [cardType: string]: GridDef } = {
     margin: { row: "5px", column: "10px" },
   },
 };
+
+export { gridDefs };

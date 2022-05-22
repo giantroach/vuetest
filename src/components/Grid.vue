@@ -40,7 +40,6 @@
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
 import { SizeDef, MarginDef, GridDef } from "../type/GridDef.d";
-import { isGridSelectable } from "../def/grid";
 import { CardDef } from "../type/CardDef.d";
 import GameCard from "./GameCard.vue";
 
@@ -66,7 +65,7 @@ export default class Grid extends Vue {
   public size!: SizeDef;
   public margin!: string;
   public cardIDs!: string[][];
-  public selectable!: string[][];
+  public selectable!: boolean[][];
   public selected!: boolean[][];
   public exclusiveSelect = true;
   public active!: boolean;
