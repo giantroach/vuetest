@@ -83,14 +83,14 @@ export default class App extends Vue {
     selectable: [[], [], [], [true, true, false], []],
     selected: [],
     exclusiveSelect: true,
-    active: true,
+    active: false,
   };
 
   public handData: HandData = {
     cardIDs: ["mainCard0", "mainCard1", "mainCard2"],
     selectable: [true, true, false],
     selected: [],
-    active: true,
+    active: false,
   };
 
   public gamedata: Gamedata = {
@@ -108,7 +108,10 @@ export default class App extends Vue {
 
   mounted() {
     this.initBgaNotification();
-    const s = new State(this.gridData);
+    const s = new State(this.gridData, this.handData);
+    s.current = "playerTurn:init";
+    s.refresh();
+    console.log("state", s);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
