@@ -109,7 +109,7 @@ export default class App extends Vue {
   mounted() {
     this.initBgaNotification();
     const s = new State(this.gridData, this.handData);
-    s.current = "playerTurn:init";
+    s.current.value = "playerTurn:init";
     s.refresh();
     console.log("state", s);
   }

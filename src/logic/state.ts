@@ -1,6 +1,6 @@
 import { GridData } from "../type/Grid.d";
 import { HandData } from "../type/Hand.d";
-import { watch } from "vue";
+import { watch, ref, Ref } from "vue";
 
 type CurrentState =
   | "init"
@@ -15,42 +15,34 @@ type CurrentState =
 
 export class State {
   constructor(private gridData: GridData, private handData: HandData) {
-    console.log("this.gridData", this.gridData);
-    watch(this.gridData, () => {
-      // FIXME: this may cause infinite loop
-      this.refresh();
-    });
-
-    watch(this.handData, () => {
+    watch([this.gridData, this.handData, this.current], () => {
       // FIXME: this may cause infinite loop
       this.refresh();
     });
   }
 
-  public current: CurrentState = "init";
+  public current: Ref<CurrentState> = ref("init");
 
   public refresh() {
-    switch (this.current) {
+    switch (this.current.value) {
       case "playerTurn:init":
         this.assign(this.handData, "active", true);
-        this.current = "playerTurn:beforeCardSelect";
+        this.current.value = "playerTurn:beforeCardSelect";
         break;
 
       case "playerTurn:beforeCardSelect":
         if (this.handData.selected?.includes(true)) {
-          this.current = "playerTurn:afterCardSelect";
-          this.refresh();
+          this.current.value = "playerTurn:afterCardSelect";
         }
         break;
 
       case "playerTurn:afterCardSelect":
-        this.current = "playerTurn:beforeGridSelect";
-        this.refresh();
+        this.current.value = "playerTurn:beforeGridSelect";
         break;
 
       case "playerTurn:beforeGridSelect":
         if (!this.handData.selected?.includes(true)) {
-          this.current = "playerTurn:beforeCardSelect";
+          this.current.value = "playerTurn:beforeCardSelect";
           this.assign(this.gridData, "active", false);
           this.assign(this.gridData, "selected", []);
           break;
@@ -59,7 +51,7 @@ export class State {
         break;
     }
 
-    console.log("debug", this.current, this.gridData, this.handData);
+    console.log("debug", this.current.value, this.gridData, this.handData);
   }
 
   // avoid unnecessary update
