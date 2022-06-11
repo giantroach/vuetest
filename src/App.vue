@@ -77,7 +77,7 @@ export default class App extends Vue {
       [],
       ["mainCard1"],
       ["centerCard0", "centerCard1", "centerCard2"],
-      [],
+      [undefined, "mainCard3", undefined],
       [],
     ],
     selectable: [[], [], [], [true, true, false], []],
