@@ -1,12 +1,5 @@
 import { CardDef } from "../type/CardDef.d";
 
-const always = function (): boolean {
-  return true;
-};
-const noway = function (): boolean {
-  return false;
-};
-
 export const cardDefs: { [cardType: string]: CardDef } = {
   mainCard: {
     image: require("@/assets/cardset.png"),

@@ -11,6 +11,8 @@
       :cardIDs="gridData.cardIDs"
       :selectable="gridData.selectable"
       :selected="gridData.selected"
+      :selectableCol="gridData.selectableCol"
+      :selectedCol="gridData.selectedCol"
       :active="gridData.active"
     >
     </Grid>
@@ -82,6 +84,8 @@ export default class App extends Vue {
     ],
     selectable: [[], [], [], [true, true, false], []],
     selected: [],
+    selectableCol: [],
+    selectedCol: [],
     exclusiveSelect: true,
     active: false,
   };

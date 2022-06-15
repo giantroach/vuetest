@@ -3,11 +3,17 @@
     <li
       v-for="(gridRow, idx) in grid"
       :key="idx"
+      class="grid-row"
+      :class="{
+        selectable: isColSelectable(idx),
+        selected: isColSelected(idx),
+      }"
       v-bind:style="{
         width: size.width,
         borderRadius: size.radius,
         margin: margin,
       }"
+      @click="selectCol(idx)"
     >
       <ul>
         <li
@@ -52,11 +58,13 @@ import GameCard from "./GameCard.vue";
     cardIDs: Array,
     selectable: Array,
     selected: Array,
+    selectableCol: Array,
+    selectedCol: Array,
     exclusiveSelect: Boolean,
     active: Boolean,
   },
   inject: ["gridDef", "cardDef"],
-  emits: ["selectGrid"],
+  emits: ["selectGrid", "selectCol"],
 })
 export default class Grid extends Vue {
   public gridDef!: { [cardType: string]: GridDef };
@@ -67,6 +75,8 @@ export default class Grid extends Vue {
   public cardIDs!: string[][];
   public selectable!: boolean[][];
   public selected!: boolean[][];
+  public selectableCol!: boolean[];
+  public selectedCol!: boolean[];
   public exclusiveSelect = true;
   public active!: boolean;
   public cardDef!: { [cardType: string]: CardDef };
@@ -117,6 +127,20 @@ export default class Grid extends Vue {
       : false;
   }
 
+  public isColSelectable(x: number): boolean {
+    if (!this.active) {
+      return false;
+    }
+    return this.selectableCol && this.selectableCol[x] ? true : false;
+  }
+
+  public isColSelected(x: number): boolean {
+    if (!this.active) {
+      return false;
+    }
+    return this.selectedCol && this.selectedCol[x] ? true : false;
+  }
+
   public selectExcept(x: number, y: number): void {
     this.selected.forEach((s, iy) => {
       if (!s) {
@@ -128,6 +152,18 @@ export default class Grid extends Vue {
         }
         this.selected[iy][ix] = false;
       });
+    });
+  }
+
+  public selectColExcept(x: number): void {
+    this.selectedCol.forEach((s, i) => {
+      if (!s) {
+        return;
+      }
+      if (x === i) {
+        return;
+      }
+      this.selectedCol[i] = false;
     });
   }
 
@@ -146,6 +182,19 @@ export default class Grid extends Vue {
         this.selectExcept(x, y);
       }
       this.$emit("selectGrid", { x, y });
+    }
+  }
+
+  public selectCol(x: number): void {
+    if (!this.isColSelectable(x)) {
+      return;
+    }
+    this.selectedCol[x] = !this.selectedCol[x];
+    if (this.selectedCol[x]) {
+      if (this.exclusiveSelect) {
+        this.selectColExcept(x);
+      }
+      this.$emit("selectCol", x);
     }
   }
 }
@@ -169,12 +218,20 @@ ul.grid {
   transform: scale(0.6);
   margin: -120px 0;
 }
-.selectable {
-  border: 2px solid #05fdff;
-  box-shadow: 0 0 5px 2px #05fdff;
+li.grid-cell.selectable {
+  border: 2px solid #03b0b1;
+  box-shadow: 0 0 5px 5px #05fdff;
 }
-.selected {
-  border: 2px solid #fefb05;
-  box-shadow: 0 0 5px 2px #fefb05;
+li.grid-cell.selected {
+  border: 2px solid #c3c104;
+  box-shadow: 0 0 5px 5px #9a9803;
+}
+li.grid-row.selectable {
+  border: 2px solid #03b0b1;
+  box-shadow: 0 0 5px 5px #05fdff;
+}
+li.grid-row.selected {
+  border: 2px solid #c3c104;
+  box-shadow: 0 0 5px 5px #9a9803;
 }
 </style>
