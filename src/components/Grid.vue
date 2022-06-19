@@ -11,7 +11,8 @@
       v-bind:style="{
         width: size.width,
         borderRadius: size.radius,
-        margin: margin,
+        marginRight: idx === grid.length - 1 ? 0 : marginCol,
+        marginLeft: idx === 0 ? 0 : marginCol,
       }"
       @click="selectCol(idx)"
     >
@@ -28,7 +29,8 @@
             width: size.width,
             height: size.height,
             borderRadius: size.radius,
-            margin: margin,
+            marginTop: idy === 0 ? 0 : marginRow,
+            marginBottom: idy === gridRow.length - 1 ? 0 : marginRow,
           }"
           @click="selectGrid(idx, idy)"
         >
@@ -71,7 +73,8 @@ export default class Grid extends Vue {
   public grid!: number[][];
   public type!: string; // card type
   public size!: SizeDef;
-  public margin!: string;
+  public marginRow!: string;
+  public marginCol!: string;
   public cardIDs!: string[][];
   public selectable!: boolean[][];
   public selected!: boolean[][];
@@ -89,7 +92,8 @@ export default class Grid extends Vue {
       this.grid = def.layout;
     }
     this.size = def.size;
-    this.margin = this.formatMargin(def.margin);
+    this.marginCol = this.formatMarginCol(def.margin);
+    this.marginRow = this.formatMarginRow(def.margin);
   }
 
   private parseLayoutStr(layoutStr: string): number[][] {
@@ -102,11 +106,16 @@ export default class Grid extends Vue {
     return new Array(x).fill(new Array(y).fill(null));
   }
 
-  private formatMargin(margin: MarginDef): string {
+  private formatMarginRow(margin: MarginDef): string {
     const r = /^(\d+)(.+)/;
     const rm = r.exec(margin.row) || [null, "0", ""];
+    return `${Number(rm[1]) / 2}${rm[2]}`;
+  }
+
+  private formatMarginCol(margin: MarginDef): string {
+    const r = /^(\d+)(.+)/;
     const cm = r.exec(margin.column) || [null, "0", ""];
-    return `${Number(rm[1]) / 2}${rm[2]} ${Number(cm[1]) / 2}${cm[2]}`;
+    return `${Number(cm[1]) / 2}${cm[2]}`;
   }
 
   public isSelectable(x: number, y: number): boolean {
@@ -212,7 +221,7 @@ li {
   list-style-type: none;
 }
 li.grid-cell {
-  border: 1px solid rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(0, 0, 0, 0.5);
 }
 ul.grid {
   transform: scale(0.6);
@@ -226,12 +235,16 @@ li.grid-cell.selected {
   border: 2px solid #c3c104;
   box-shadow: 0 0 5px 5px #9a9803;
 }
-li.grid-row.selectable {
+ul.grid > li.grid-row {
+  border: 2px solid transparent;
+  box-shadow: 0 0 5px 5px transparent;
+}
+ul.grid > li.grid-row.selectable {
   border: 2px solid #03b0b1;
   box-shadow: 0 0 5px 5px #05fdff;
 }
-li.grid-row.selected {
-  border: 2px solid #c3c104;
-  box-shadow: 0 0 5px 5px #9a9803;
+ul.grid > li.grid-row.selected {
+  border: 2px solid #fefb05;
+  box-shadow: 0 0 5px 5px #fefb05;
 }
 </style>

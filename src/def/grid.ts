@@ -22,7 +22,7 @@ const gridDefs: { [cardType: string]: GridDef } = {
     type: "square",
     layout: "3x5",
     size: { width: "138px", height: "120px", radius: "10px" },
-    margin: { row: "5px", column: "10px" },
+    margin: { row: "10px", column: "10px" },
   },
 };
 
