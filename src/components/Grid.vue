@@ -233,7 +233,7 @@ li.grid-cell.selectable {
 }
 li.grid-cell.selected {
   border: 2px solid #c3c104;
-  box-shadow: 0 0 5px 5px #9a9803;
+  box-shadow: 0 0 5px 5px #fefb05;
 }
 ul.grid > li.grid-row {
   border: 2px solid transparent;
