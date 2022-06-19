@@ -60,6 +60,7 @@
         borderRadius: size.radius,
         backgroundPosition: bgPos,
       }"
+      @click="selectCard"
     >
       <div v-if="text" class="container-text">
         <div
@@ -69,7 +70,6 @@
             top: textDef.offsetY,
             borderWidth: textDef.padding || 0,
           }"
-          @click="selectCard"
         >
           {{ text }}
         </div>
